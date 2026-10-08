@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\DashboardService;
 use App\Services\OfficerAssignmentNotifier;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class OfficerAccountabilityController extends Controller

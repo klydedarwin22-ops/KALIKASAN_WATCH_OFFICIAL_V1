@@ -37,8 +37,15 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(): bool
     {
+        $this->session()->forget([
+            'pending_face_user_id',
+            'pending_face_remember',
+            'pending_face_login_expires_at',
+            'face_auth_challenge',
+        ]);
+
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
@@ -50,6 +57,23 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        $user = Auth::user();
+        if ($user?->isCitizen() && $user->barangay_verified && $user->face_template) {
+            Auth::guard('web')->logout();
+            $this->session()->put('pending_face_user_id', $user->id);
+            $this->session()->put('pending_face_remember', $this->boolean('remember'));
+            $this->session()->put('pending_face_login_expires_at', now()->addMinutes(10)->timestamp);
+            $this->session()->forget('face_auth_challenge');
+
+            return false;
+        }
+
+        if ($user?->isOfficer()) {
+            $user->forceFill(['is_online' => true])->saveQuietly();
+        }
+
+        return true;
     }
 
     /**

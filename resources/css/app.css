@@ -1,8 +1,90 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views';
-@source '../../storage/framework/views';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-    --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+html.dark {
+    color-scheme: dark;
+}
+
+html.dark body,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100 {
+    background-color: #111827 !important;
+}
+
+html.dark .bg-white,
+html.dark .bg-gray-200,
+html.dark .bg-gray-300 {
+    background-color: #1f2937 !important;
+}
+
+html.dark .bg-green-50,
+html.dark .bg-emerald-50,
+html.dark .bg-blue-50,
+html.dark .bg-red-50,
+html.dark .bg-amber-50,
+html.dark .bg-yellow-50 {
+    background-color: #263548 !important;
+}
+
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-gray-700 {
+    color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-600,
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .text-green-800,
+html.dark .text-emerald-800 {
+    color: #86efac !important;
+}
+
+html.dark .text-blue-800 {
+    color: #93c5fd !important;
+}
+
+html.dark .text-red-800 {
+    color: #fca5a5 !important;
+}
+
+html.dark .text-amber-800,
+html.dark .text-yellow-800 {
+    color: #fcd34d !important;
+}
+
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-300,
+html.dark .border-green-100,
+html.dark .border-green-200,
+html.dark .border-red-200,
+html.dark .border-blue-100,
+html.dark .border-amber-200 {
+    border-color: #374151 !important;
+}
+
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+    background-color: #111827;
+    border-color: #4b5563;
+    color: #f3f4f6;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #9ca3af;
+}
+
+html.dark .bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, #111827, #1f2937, #111827) !important;
+}
+
+html.dark header.bg-white {
+    background-color: #1f2937 !important;
 }

@@ -39,6 +39,10 @@ return [
         'maps_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'face_recognition' => [
+        'node_binary' => env('FACE_RECOGNITION_NODE_BINARY', 'node'),
+    ],
+
     'twilio' => [
         'sid' => env('TWILIO_ACCOUNT_SID'),
         'token' => env('TWILIO_AUTH_TOKEN'),

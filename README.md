@@ -32,8 +32,9 @@ KALIKASAN WATCH empowers citizens to report environmental issues in their barang
 - **Report Lifecycle Management** — Officers and admins can update report status (`Pending` → `Investigating` → `Resolved` / `Rejected`) and assign reports to officers.
 - **Completion Proof Tracking** — Officers can attach a single proof photo when marking a report complete, replace it with a new image, or remove an incorrect one before saving.
 - **Comment System** — Citizens and admins can leave comments on reports for discussion and follow-up updates; officers are restricted from posting comments.
-- **Barangay Verification System** — Citizens can upload a barangay ID for identity verification. Officers/admins review, approve, or reject verification requests.
+- **Barangay Verification System** — Citizens can upload a barangay ID or certificate of residency from their dashboard after registration. Officers/admins review the privately stored document and approve or reject verification requests; citizens can resubmit after rejection.
 - **Role-Aware Dashboards** — Citizens see their own report stats; officers see assigned workload; admins see platform-wide analytics.
+- **Officer Presence** — Officers are shown as online after logging in and offline after logging out.
 - **Filtering & Pagination** — Reports list supports filtering by category, status, severity, and barangay.
 - **Authorization Policies** — Fine-grained policy layer ensuring users can only access what their role permits.
 - **Responsive Green/Eco UI** — Nature-inspired design with TailwindCSS, fully responsive across devices.
@@ -112,9 +113,16 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 GOOGLE_MAPS_API_KEY=your-google-maps-api-key-here
+FACE_RECOGNITION_NODE_BINARY=node
 ```
 
 > **Note:** You need a valid [Google Maps API Key](https://developers.google.com/maps/documentation/javascript/get-api-key) with the **Maps JavaScript API** enabled for the map features to work.
+
+### Citizen face login
+
+Citizens must have an approved National ID before enrolling in face login. After approval, they enroll from the prompted camera flow; subsequent password logins require the randomized camera challenge. Face templates are encrypted using Laravel's `APP_KEY`, and uploaded challenge frames are processed locally by the server and are not retained. Camera access requires HTTPS or localhost. If Node.js is not on the PHP process `PATH`, set `FACE_RECOGNITION_NODE_BINARY` to the Node executable path.
+
+Face matching is a biometric check and may produce false matches or rejections; its current similarity and liveness thresholds have not been validated for production identity assurance. Keep the staff-assisted reset available and evaluate with representative devices and users before relying on it for high-impact decisions.
 
 ---
 
@@ -187,7 +195,7 @@ KALIKASAN_WATCH/
 │   │   │   ├── DashboardController.php    # Role-aware dashboard
 │   │   │   ├── MapController.php          # Public interactive map
 │   │   │   ├── ReportController.php       # Full report CRUD + actions
-│   │   │   └── VerificationController.php # Barangay ID verification
+│   │   │   └── VerificationController.php # National ID verification
 │   │   ├── Middleware/
 │   │   │   └── RoleMiddleware.php         # Role-based route guard
 │   │   └── Requests/

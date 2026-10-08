@@ -28,13 +28,13 @@ class DashboardController extends Controller
             return $this->citizenDashboard($user);
         }
 
-        return $this->adminDashboard($user);
+        return $this->adminDashboard($user, $request);
     }
 
     /**
      * Admin/officer dashboard with full analytics.
      */
-    private function adminDashboard($user): View
+    private function adminDashboard($user, Request $request): View
     {
         $stats = $this->dashboardService->getOverviewStats();
         $reportsByCategory = $this->dashboardService->getReportsByCategory();

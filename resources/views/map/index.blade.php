@@ -16,7 +16,7 @@
     </style>
     @endpush
 
-    <div class="py-6 bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-800 min-h-screen">
+    <div class="py-6 bg-gray-100 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 {{-- Map Legend --}}
@@ -30,9 +30,6 @@
                     </span>
                     <span class="flex items-center gap-1">
                         <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span> Resolved
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <span class="inline-block w-3 h-3 rounded-full bg-red-500"></span> Rejected
                     </span>
                     <span class="ml-auto text-gray-500">{{ $reports->count() }} reports plotted</span>
                 </div>
@@ -50,7 +47,6 @@
                 'pending':       '#eab308',
                 'investigating': '#3b82f6',
                 'resolved':      '#22c55e',
-                'rejected':      '#ef4444',
             };
 
             const map = new google.maps.Map(document.getElementById('reports-map'), {
