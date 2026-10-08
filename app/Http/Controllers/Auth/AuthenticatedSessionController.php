@@ -24,9 +24,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $authenticated = $request->authenticate();
 
         $request->session()->regenerate();
+
+        if (! $authenticated) {
+            return redirect()->route('login.face');
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
@@ -36,6 +40,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = $request->user();
+
+        if ($user?->isOfficer()) {
+            $user->forceFill(['is_online' => false])->saveQuietly();
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

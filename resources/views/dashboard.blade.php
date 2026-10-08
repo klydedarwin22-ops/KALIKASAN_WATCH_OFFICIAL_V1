@@ -8,7 +8,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-8 bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-800 min-h-screen">
+    <div class="py-8 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             {{-- Status Overview Cards --}}
@@ -146,7 +146,7 @@
             </div>
             @endif
 
-            @if($officerAccountability->isNotEmpty())
+            @if($officerAccountability->isNotEmpty() || Auth::user()->isAdmin())
                 <section class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="border-b border-gray-100 p-6">
                         <h3 class="text-lg font-semibold text-gray-800">Officer Accountability</h3>
@@ -156,6 +156,7 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-5 py-3 text-left text-xs font-semibold uppercase text-gray-500">Officer</th>
+                                    <th class="px-5 py-3 text-left text-xs font-semibold uppercase text-gray-500">Online Status</th>
                                     <th class="px-5 py-3 text-left text-xs font-semibold uppercase text-gray-500">Assigned Reports</th>
                                     <th class="px-5 py-3 text-left text-xs font-semibold uppercase text-gray-500">Completed</th>
                                     <th class="px-5 py-3 text-left text-xs font-semibold uppercase text-gray-500">In Progress</th>
@@ -166,7 +167,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                @foreach($officerAccountability as $entry)
+                                @forelse($officerAccountability as $entry)
                                     <tr>
                                         <td class="px-5 py-4 text-sm">
                                             <div class="font-medium text-gray-900">{{ $entry->officer->name }}</div>
@@ -174,6 +175,12 @@
                                             @if($entry->attention_count > 0)
                                                 <div class="mt-2 text-xs font-medium text-amber-700">{{ $entry->attention_count }} report{{ $entry->attention_count === 1 ? '' : 's' }} require attention</div>
                                             @endif
+                                        </td>
+                                        <td class="px-5 py-4 text-sm">
+                                            <span class="inline-flex items-center gap-2 font-medium {{ $entry->officer->is_online ? 'text-green-700' : 'text-red-700' }}">
+                                                <span class="h-2.5 w-2.5 rounded-full {{ $entry->officer->is_online ? 'bg-green-500' : 'bg-red-500' }}"></span>
+                                                {{ $entry->officer->is_online ? 'Online' : 'Offline' }}
+                                            </span>
                                         </td>
                                         <td class="px-5 py-4 text-sm font-medium text-gray-900">{{ $entry->assigned_count }}</td>
                                         <td class="px-5 py-4 text-sm text-gray-700">{{ $entry->completed_count }}</td>
@@ -206,7 +213,7 @@
                                     </tr>
                                     @if($entry->overdue_reports->isNotEmpty())
                                         <tr class="bg-amber-50/60">
-                                            <td colspan="{{ Auth::user()->isAdmin() ? 6 : 5 }}" class="px-5 py-3">
+                                            <td colspan="{{ Auth::user()->isAdmin() ? 7 : 6 }}" class="px-5 py-3">
                                                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-amber-900">
                                                     @foreach($entry->overdue_reports as $report)
                                                         <a href="{{ route('reports.show', $report) }}" class="underline underline-offset-2">#{{ $report->id }} {{ $report->title }} · due {{ $report->estimated_due_at->format('M d, Y') }}</a>
@@ -215,7 +222,13 @@
                                             </td>
                                         </tr>
                                     @endif
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="{{ Auth::user()->isAdmin() ? 7 : 6 }}" class="px-5 py-10 text-center text-sm text-gray-500">
+                                            No officers found.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

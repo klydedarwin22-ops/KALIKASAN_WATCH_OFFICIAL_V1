@@ -30,6 +30,21 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
+    public function test_officer_is_marked_online_after_successful_login(): void
+    {
+        $officer = User::factory()->create([
+            'role' => 'officer',
+            'is_online' => false,
+        ]);
+
+        $this->post('/login', [
+            'email' => $officer->email,
+            'password' => 'password',
+        ])->assertRedirect(route('dashboard', absolute: false));
+
+        $this->assertTrue($officer->fresh()->is_online);
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
@@ -50,5 +65,20 @@ class AuthenticationTest extends TestCase
 
         $this->assertGuest();
         $response->assertRedirect('/');
+    }
+
+    public function test_officer_is_marked_offline_after_logout(): void
+    {
+        $officer = User::factory()->create([
+            'role' => 'officer',
+            'is_online' => true,
+        ]);
+
+        $this->actingAs($officer)
+            ->post('/logout')
+            ->assertRedirect('/');
+
+        $this->assertGuest();
+        $this->assertFalse($officer->fresh()->is_online);
     }
 }

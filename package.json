@@ -17,5 +17,16 @@
         "postcss": "^8.4.31",
         "tailwindcss": "^3.1.0",
         "vite": "^7.0.7"
+    },
+    "dependencies": {
+        "@tensorflow/tfjs-backend-cpu": "^4.22.0",
+        "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+        "@tensorflow/tfjs-converter": "^4.22.0",
+        "@tensorflow/tfjs-core": "^4.22.0",
+        "@tensorflow/tfjs-data": "^4.22.0",
+        "@tensorflow/tfjs-layers": "^4.22.0",
+        "@vladmandic/human": "^3.3.6",
+        "jpeg-js": "^0.4.4",
+        "pngjs": "^7.0.0"
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -18,7 +19,10 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->get('/profile');
 
-        $response->assertOk();
+        $response        ->assertOk()
+        ->assertSee('Appearance')
+        ->assertSee('data-theme-toggle', false)
+        ->assertSee('Dark mode');
     }
 
     public function test_profile_information_can_be_updated(): void
@@ -107,6 +111,29 @@ class ProfileTest extends TestCase
 
         $this->assertGuest();
         $this->assertNull($user->fresh());
+    }
+
+    public function test_account_deletion_removes_private_verification_images_and_face_template(): void
+    {
+        Storage::fake('local');
+        $idPath = 'barangay-ids/private-id.png';
+        $selfiePath = 'selfies/private-selfie.jpg';
+        Storage::disk('local')->put($idPath, 'private ID');
+        Storage::disk('local')->put($selfiePath, 'private selfie');
+        $user = User::factory()->create([
+            'role' => 'citizen',
+            'barangay_id_path' => $idPath,
+            'selfie_path' => $selfiePath,
+            'face_template' => array_fill(0, 128, 0.25),
+        ]);
+
+        $this->actingAs($user)
+            ->delete('/profile', ['password' => 'password'])
+            ->assertRedirect('/');
+
+        $this->assertNull($user->fresh());
+        Storage::disk('local')->assertMissing($idPath);
+        Storage::disk('local')->assertMissing($selfiePath);
     }
 
     public function test_correct_password_must_be_provided_to_delete_account(): void

@@ -18,6 +18,7 @@ class MapController extends Controller
     {
         $reports = Report::with('user')
             ->select(['id', 'title', 'category', 'severity', 'status', 'latitude', 'longitude', 'created_at', 'user_id'])
+            ->where('status', '!=', 'rejected')
             ->latest()
             ->get();
 

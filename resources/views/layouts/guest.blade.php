@@ -6,6 +6,12 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'KALIKASAN WATCH') }}</title>
+        <script>
+            (() => {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark') document.documentElement.classList.add('dark');
+            })();
+        </script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,5 +36,6 @@
                 {{ $slot }}
             </div>
         </div>
+        @stack('scripts')
     </body>
 </html>

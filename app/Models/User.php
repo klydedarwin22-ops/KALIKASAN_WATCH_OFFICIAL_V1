@@ -21,6 +21,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $barangay
  * @property bool $barangay_verified
  * @property string|null $barangay_id_path
+ * @property string|null $selfie_path
+ * @property array<int, float>|null $face_template
  * @property string|null $verification_notes
  * @property \Carbon\Carbon|null $verified_at
  * @property int|null $verified_by
@@ -41,9 +43,12 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'is_active',
         'barangay',
         'barangay_verified',
         'barangay_id_path',
+        'selfie_path',
+        'face_template',
         'verification_notes',
         'verified_at',
         'verified_by',
@@ -57,6 +62,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'face_template',
     ];
 
     /**
@@ -69,7 +75,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_online' => 'boolean',
             'barangay_verified' => 'boolean',
+            'face_template' => 'encrypted:array',
             'verified_at' => 'datetime',
         ];
     }
